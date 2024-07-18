@@ -44,6 +44,10 @@ for (const line of lines) {
         const parts = trimmedLine.split(' ')
         parts.shift()
         currentCurve.typeveg = parts.join(' ')
+    } else if (trimmedLine.startsWith('...SIDEVEG')) {
+        const parts = trimmedLine.split(' ')
+        parts.shift()
+        currentCurve.sideveg = parts.join(' ') === "JA"
     } else if (trimmedLine.startsWith('...ADRESSENAVN')) {
         const parts = trimmedLine.split(' ')
         parts.shift()
@@ -62,7 +66,7 @@ for (const line of lines) {
         let lat = parseFloat(parts[0])
         let lon = parseFloat(parts[1])
 
-        currentCurve.coordinates.push({ lat: lat, lon: lon })
+        currentCurve.coordinates.push({lat: lat, lon: lon})
     }
 }
 
@@ -87,8 +91,13 @@ const timestamp = date.getTime()
 
 const ut = curves
     .filter((c) => c.objtype === 'Veglenke')
+    .filter((c) => c.sideveg === false)
+    .filter((c) => c.typeveg !== 'rundkjøring')
+    .filter((c) => c.typeveg !== 'gangfelt')
+    .filter((c) => c.typeveg !== 'rampe')
+    .filter((c) => c.typeveg !== 'trapp')
     .map((track) => {
-        const { coordinates } = track
+        const {coordinates} = track
         const filteredCoordinates = coordinates.filter((_, i) => i % 2 === 0)
 
         // Sjekk om siste koordinat mangler og legg det til om nødvendig
