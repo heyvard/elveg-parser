@@ -2,7 +2,10 @@ const fs = require('fs')
 
 const proj4 = require('proj4')
 
-const data = fs.readFileSync('/Users/havard/git/hsa/turix/elveg/0301Elveg2.0.SOS', 'utf8')
+
+// read 0301Elveg2.0.SOSfrom current dir
+
+const data = fs.readFileSync('0301Elveg2.0.SOS', 'utf8')
 
 const lines = data.trim().split('\n')
 
@@ -99,6 +102,8 @@ const ut = curves
     })
 
 const json = JSON.stringify(ut, null, null)
-fs.writeFileSync(`elveg-${timestamp}.json`, json)
+// write file to output folder
+fs.writeFileSync(`output/elveg-${timestamp}.json`, json)
+
 
 console.log(`Wrote ${ut.length} veier to elveg-${timestamp}.json`)
